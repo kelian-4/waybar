@@ -1,0 +1,205 @@
+{
+        "layer": "top",
+        "position": "top",
+        "reload_style_on_change": true,
+        "modules-left": ["custom/os_button","mpris","clock","custom/pacman","custom/power","custom/lock","custom/reboot"],
+        "modules-center": ["custom/separator","hyprland/workspaces"],
+        "modules-right": ["group/expand","backlight","pulseaudio","battery","tray","custom/notification"],
+
+
+
+        "custom/separator": {
+            "format": "",
+            "tooltip": false
+        },
+
+
+
+        "hyprland/workspaces": {
+            "format": "{name}:{icon}",
+            "format-icons": {
+                "active": "",
+                "default": "",
+                "empty": ""
+            },
+            "persistent-workspaces": {
+                "*": [1]
+            }
+        },
+
+	"custom/notification": {
+            "tooltip": false,
+            "format": "",
+            "on-click": "swaync-client -t -sw",
+            "escape": true
+        },
+        "clock": {
+            "format": " {:%d/%m  %I:%M %p}",
+            "interval": 1,
+            "tooltip-format": "<tt>{calendar}</tt>",
+            "calendar": {
+                "format": {
+                    "today": "<span color='#fAfBfC'><b>{}</b></span>"
+                }
+            },
+            "actions": {
+                "on-click-right": "shift_down",
+                "on-click": "shift_up"
+            }
+        },
+	"custom/lock": {
+		"format": "<span color='#00FFFF'>  </span>",
+                "on-click": "hyprctl dispatch exit",
+                "tooltip": true,
+                "tooltip-format": "锁屏"
+
+        },
+	"custom/power": {
+		"format": "<span color='#FF4040'>  </span>",
+                "on-click": "systemctl poweroff",
+                "tooltip": true,
+                "tooltip-format": "关机"
+
+  	},
+  	"custom/reboot": {
+  		  "format": "<span color='#FFD700'>  </span>",
+    		  "on-click": "systemctl reboot",
+    		  "tooltip": true,
+    	          "tooltip-format": "重启"
+        },
+
+
+        "pulseaudio": {
+    		"format": "{icon} {volume}%",
+    		"format-bluetooth": "{volume}% {icon}",
+    		"format-muted": "",
+    		"format-source": " {volume}%",
+    		"format-source-muted": " Muted",
+    		"format-icons": {
+        		"headphones": "",
+        		"handsfree": "",
+        		"headset": "",
+        		"phone": "",
+        		"phone-muted": "",
+        		"portable": "",
+        		"car": "",
+        		"default": ["", "", ""]
+    	        },
+    		"scroll-step": 5,
+    		"on-click": "pavucontrol",
+    		"on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+    		"on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%"
+	},
+
+
+        "bluetooth": {
+            "format-on": "󰂯",
+            "format-off": "BT-off",
+            "format-disabled": "󰂲",
+            "format-connected-battery": "{device_battery_percentage}% 󰂯",
+            "format-alt": "{device_alias} 󰂯",
+	    "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+            "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
+            "tooltip-format-enumerate-connected": "{device_alias}\n{device_address}",
+            "tooltip-format-enumerate-connected-battery": "{device_alias}\n{device_address}\n{device_battery_percentage}%",
+            "on-click": "rfkill toggle bluetooth",
+	    "on-click-right" : "blueman-manager"
+	},
+
+
+	"backlight": {
+        	"format": "{icon} {percent}%",
+        	"format-icons": ["", ""],
+        	"tooltip": true,
+        	"on-scroll-up": "brightnessctl set +5%",
+        	"on-scroll-down": "brightnessctl set 5%-",
+        	"on-click-right": "brightnessctl s 50%",
+        	"scroll-step": 5
+    	},
+
+	  // Battery
+  	"battery": {
+   		 "states": {
+   	  		 "warning": 30,
+     			 "critical": 15
+   		 },
+   		 "format": "{icon}{capacity: >3}%",
+   		 "format-icons": ["", "", "", "", ""]
+ 	},
+
+
+        "custom/pacman": {
+            "format": "󰅢  {}",
+            "interval": 30,
+            "exec": "checkupdates | wc -l",
+            "exec-if": "exit 0",
+            "on-click": "kitty sh -c 'yay -Syu; echo Done - Press enter to exit; read'; pkill -SIGRTMIN+8 waybar",
+            "signal": 8,
+            "tooltip": false,
+        },
+        "custom/expand": {
+            "format": "",
+            "tooltip": false
+        },
+        "custom/endpoint":{
+            "format": "",
+            "tooltip": false
+        },
+        "group/expand": {
+            "orientation": "horizontal",
+            "drawer": {
+                "transition-duration": 600,
+                "transition-to-left": true,
+                "click-to-reveal": true
+            },
+            "modules": ["custom/expand", "custom/colorpicker","memory","disk","bluetooth","custom/endpoint"],
+        },
+
+        "custom/colorpicker": {
+            "format": "{}",
+            "return-type": "json",
+            "interval": "once",
+            "exec": "~/.config/waybar/scripts/colorpicker.sh -j",
+            "on-click": "~/.config/waybar/scripts/colorpicker.sh",
+            "signal": 1
+        },
+
+	"disk" : {
+        "format": "{percentage_used}%  ",
+        "tooltip": true,
+        "tooltip-format": "{used} / {total} ({percentage_free}%)"
+        },
+
+    "memory": {
+           	 "format": "{}% 󰍛",
+             "tooltip": true,
+             "tooltip-format": "{used} / {total}"
+
+
+    },
+
+
+	"tray": {
+            "icon-size": 12,
+            "spacing": 10
+        },
+
+
+
+    	"custom/os_button": {
+      	"format": "󰣇",
+      	"on-click": "rofi -show-icons -show drun",
+      	"tooltip": false
+    	},
+    	"wlr/taskbar": {
+      	"format": "{icon}",
+      	"icon-size": 20,
+      	"spacing": 2,
+      	"on-click-middle": "close",
+      	"tooltip-format": "{title}",
+      	"ignore-list": [],
+      	"on-click": "activate"
+	}
+  }
+]
+
